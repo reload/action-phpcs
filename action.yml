@@ -1,0 +1,28 @@
+name: 'Phpcs and reviewdog runner'
+description: 'This action installs reviewdog 🐶, runs phpcs 🐘 and pipes output to reviewdog. It depends '
+inputs:
+  reviewdog_token:
+    description: 'The Github API token needed for Reviewdog'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install phpcs
+      run: $GITHUB_ACTION_PATH/install.sh
+      shell: bash
+      env:
+        REVIEWDOG_VERSION: 0.10.2
+        REVIEWDOG_TEMPDIR: ${{ runner.temp }}
+    - name: Run phpcs and report to reviewdog
+      run: |
+        set +o pipefail
+        phpcs --config-set ignore_errors_on_exit 1
+        phpcs --config-set ignore_warnings_on_exit 1
+        $(composer config bin-dir)/phpcs --report=checkstyle \
+        | reviewdog -f=checkstyle -name=phpcs -reporter=github-pr-check -fail-on-error=true
+      shell: bash
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.reviewdog_token }}
+
+branding:
+  icon: 'terminal'
+  color: 'gray-dark'
