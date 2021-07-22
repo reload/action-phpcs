@@ -10,7 +10,7 @@ runs:
       run: $GITHUB_ACTION_PATH/install.sh
       shell: bash
       env:
-        REVIEWDOG_VERSION: 0.10.2
+        REVIEWDOG_VERSION: 0.13.0
         REVIEWDOG_TEMPDIR: ${{ runner.temp }}
     - name: Run phpcs and report to reviewdog
       run: |
