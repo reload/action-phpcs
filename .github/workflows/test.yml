@@ -1,0 +1,35 @@
+# This workflow is used for testing the phpcs action of this repository.
+name: Test action
+on: pull_request
+jobs:
+  test:
+    name: Setup php
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2"
+      - name: Setup PHP, with composer and extensions
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: '7.4'
+          tools: composer:v2
+          extensions: dom, curl, libxml, mbstring, zip, pdo, mysql, pdo_mysql, bcmath, gd, exif, iconv
+      - name: Setup Drupal
+        uses: bluehorndigital/setup-drupal@v1.0.1
+        with:
+          version: '^9.1'
+          path: drupal
+      - name: Install phpcs
+        working-directory: drupal
+        run: composer require squizlabs/php_codesniffer
+      - name: Copy phpcs rules
+        uses: canastro/copy-file-action@0.0.2
+        with:
+          source: "test-assets/phpcs.xml"
+          target: "drupal/phpcs.xml"
+      - name: Run phpcs
+        uses: ./
+        with:
+          path: drupal
+          reviewdog_token: ${{ secrets.GITHUB_TOKEN }}

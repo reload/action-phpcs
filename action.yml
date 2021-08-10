@@ -3,6 +3,11 @@ description: 'This action installs reviewdog 🐶, runs phpcs 🐘 and pipes out
 inputs:
   reviewdog_token:
     description: 'The Github API token needed for Reviewdog'
+  path:
+    description: 'In which directory should phpcs be sniffing?'
+    required: false
+    default: '.'
+
 runs:
   using: 'composite'
   steps:
@@ -10,13 +15,20 @@ runs:
       run: $GITHUB_ACTION_PATH/install.sh
       shell: bash
       env:
-        REVIEWDOG_VERSION: 0.13.0
+        REVIEWDOG_VERSION: v0.13.0
         REVIEWDOG_TEMPDIR: ${{ runner.temp }}
     - name: Run phpcs and report to reviewdog
       run: |
         set +o pipefail
-        phpcs --config-set ignore_errors_on_exit 1
-        phpcs --config-set ignore_warnings_on_exit 1
+
+        # Change directory to where phpcs should do its thing.
+        cd ${{ inputs.path }}
+
+        # No warnings errors/warnings on exit from phpcs please.
+        $(composer config bin-dir)/phpcs --config-set ignore_errors_on_exit 1
+        $(composer config bin-dir)/phpcs --config-set ignore_warnings_on_exit 1
+
+        # Run code sniffer.
         $(composer config bin-dir)/phpcs --report=checkstyle \
         | reviewdog -f=checkstyle -name=phpcs -reporter=github-pr-check -fail-on-error=true
       shell: bash
