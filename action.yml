@@ -21,10 +21,9 @@ runs:
       run: |
         set +o pipefail
 
-        # Change directory to where phpcs should do its thing.
         cd ${{ inputs.path }}
 
-        # No warnings errors/warnings on exit from phpcs please.
+        # No warnings errors/warnings since it breaks the connection to reviewdog.
         $(composer config bin-dir)/phpcs --config-set ignore_errors_on_exit 1
         $(composer config bin-dir)/phpcs --config-set ignore_warnings_on_exit 1
 
