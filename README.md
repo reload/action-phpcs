@@ -4,7 +4,7 @@ A GitHub action that runs a phpcs and reports the result to reviewdog
 # Prerequisites
 * Composer install has been executed
 * Phpcs is install by composer and available in the composer config bin-dir
-* The code styles used by phpcs are installed and confgured in phpcs.xml
+* The code styles used by phpcs are installed and confgured in the .phpcs.xml
 
 # Usage
 Add a workflow step with the action:
@@ -12,7 +12,7 @@ Add a workflow step with the action:
 ```yaml
 steps:
   - name: Run phpcs
-    uses: reload/poc-phpcs-reviewdog-action@<VERSION>
+    uses: reload/action-phpcs@<VERSION>
     with:
       reviewdog_token: ${{ secrets.GITHUB_TOKEN }}`
 ```
@@ -24,7 +24,7 @@ Example:
 ```yaml
 steps:
   - name: Run phpcs
-    uses: reload/poc-phpcs-reviewdog-action@<VERSION>
+    uses: reload/action-phpcs@<VERSION>
     with:
       path: drupal
       reviewdog_token: ${{ secrets.GITHUB_TOKEN }}`
