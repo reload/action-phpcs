@@ -22,7 +22,7 @@ jobs:
           path: drupal
       - name: Install phpcs
         working-directory: drupal
-        run: composer require squizlabs/php_codesniffer
+        run: composer require squizlabs/php_codesniffer dealerdirect/phpcodesniffer-composer-installer
       - name: Copy phpcs rules
         uses: canastro/copy-file-action@0.0.2
         with:
