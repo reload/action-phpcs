@@ -32,4 +32,5 @@ jobs:
         uses: ./
         with:
           path: drupal
+          phpcs_path: web/sites/default
           reviewdog_token: ${{ secrets.GITHUB_TOKEN }}

@@ -4,10 +4,14 @@ inputs:
   reviewdog_token:
     description: 'The Github API token needed for Reviewdog'
   path:
-    description: 'In which directory should phpcs be sniffing?'
+    description: 'What is the base path (where phpcs config file and composer.json is)?'
     required: false
     default: '.'
-
+  phpcs_path:
+    description: 'Which directory should phpcs be sniffing?'
+    required: false
+    default: '.'
+ 
 runs:
   using: 'composite'
   steps:
@@ -28,7 +32,7 @@ runs:
         $(composer config bin-dir)/phpcs --config-set ignore_warnings_on_exit 1
 
         # Run code sniffer.
-        $(composer config bin-dir)/phpcs --report=checkstyle \
+        $(composer config bin-dir)/phpcs --report=checkstyle ${{ inputs.phpcs_path }} \
         | reviewdog -f=checkstyle -name=phpcs -reporter=github-pr-check -fail-on-error=true
       shell: bash
       env:
