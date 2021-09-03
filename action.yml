@@ -7,6 +7,10 @@ inputs:
     description: 'In which directory should phpcs be sniffing?'
     required: false
     default: '.'
+  report_name:
+    description: 'Name of reviewdogs report'
+    required: false
+    default: 'phpcs'
 
 runs:
   using: 'composite'
@@ -29,7 +33,7 @@ runs:
 
         # Run code sniffer.
         $(composer config bin-dir)/phpcs --report=checkstyle \
-        | reviewdog -f=checkstyle -name=phpcs -reporter=github-pr-check -fail-on-error=true
+        | reviewdog -f=checkstyle -name=${{ inputs.report_name }} -reporter=github-pr-check -fail-on-error=true
       shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.reviewdog_token }}
