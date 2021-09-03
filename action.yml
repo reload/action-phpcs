@@ -25,7 +25,7 @@ runs:
       run: |
         set +o pipefail
 
-        cd ${{ inputs.path }}
+        cd "${{ inputs.path }}"
 
         # No warnings errors/warnings since it breaks the connection to reviewdog.
         $(composer config bin-dir)/phpcs --config-set ignore_errors_on_exit 1
@@ -33,7 +33,7 @@ runs:
 
         # Run code sniffer.
         $(composer config bin-dir)/phpcs --report=checkstyle \
-        | reviewdog -f=checkstyle -name=${{ inputs.report_name }} -reporter=github-pr-check -fail-on-error=true
+        | reviewdog -f=checkstyle -name="${{ inputs.report_name }}" -reporter=github-pr-check -fail-on-error=true
       shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.reviewdog_token }}
